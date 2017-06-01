@@ -6,6 +6,9 @@ function [ GC ] = nc2gcstruct( ncfile )
 %   in an open-source format, we saved the data we used as netCDF4 files.
 %   This function will read those files and return a similar structure to
 %   the one we used.
+%
+%   GC = NC2GCSTRUCT( NCFILE ) will read the file at the path NCFILE and return
+%   the structure GC.
 
 ni = ncinfo(ncfile);
 

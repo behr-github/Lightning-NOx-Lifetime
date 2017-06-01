@@ -1,6 +1,6 @@
 function [  ] = gcstruct2ncdf( ncfile, varargin )
 %GCSTRUCT2NCFILE Save a GEOS-Chem structure as a netCDF file.
-%   Detailed explanation goes here
+
 [glon,glat] = geos_chem_centers('2x25');
 xx = find(strcmpi(varargin,'lon'));
 if ~isempty(xx)

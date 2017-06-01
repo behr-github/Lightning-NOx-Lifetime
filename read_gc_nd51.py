@@ -4,11 +4,14 @@
 # have a similar format as that produced by the Matlab routine
 # "read_geos_output". These will still need a little cleanup
 # using the Matlab function "cleanup_py_struct"
+# 
+# This is meant to be run from the command line as "python read_gc_nd51.py"
+# It will prompt for the required inputs interactively
 from __future__ import print_function
 import os
 import sys
 import glob
-from bpch import bpch
+from bpch import bpch # https://pypi.python.org/pypi/bpch/1.0
 from datetime import date
 import numpy as np
 import scipy.io as sio
