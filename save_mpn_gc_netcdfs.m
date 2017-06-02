@@ -2,8 +2,8 @@ function [  ] = save_mpn_gc_netcdfs( )
 %Save the GEOS-Chem .mat files as netCDF files
 
 save_dir = '/Volumes/share2/USERS/LaughnerJ/MPN_Project/Workspaces/netCDFs';
-cases_mat_names = {'JPLnoMPN-Pickp0', 'JPLnoMPN_N2O5-Pickp0','JPLnoMPN_PNA-Pickp0','HendnoMPN-Pickp0','HendwMPN-PNA-N2O5-Pickp0','HendwMPN-PNA-N2O5-Pickp33'};
-cases_save_names = {'BaseCase', 'N2O5Case','PNACase','HNO3Case','UpdatedCase','UpdatedPlus33Case'};
+cases_mat_names = {'JPLnoMPN-Pickp0', 'JPLwMPN-Pickp0', 'JPLnoMPN_N2O5-Pickp0','JPLnoMPN_PNA-Pickp0','HendnoMPN-Pickp0','HendwMPN-PNA-N2O5-Pickp0','HendwMPN-PNA-N2O5-Pickp33'};
+cases_save_names = {'BaseCase', 'MPNCase', 'N2O5Case','PNACase','HNO3Case','UpdatedCase','UpdatedPlus33Case'};
 dc3_variables = {'HNO3','NO2_IJAVG','NO_IJAVG','O3','PSURF','TP'};
 dc3_descriptions = {'HNO3 averaged between 1600 and 2000 local time';
     'NO2 averaged between 1600 and 2000 local time';
@@ -22,18 +22,18 @@ Area = load_and_extract(fullfile(base_dir,'Daily24hrs','All2012Daily','Area.mat'
 Area.description = 'GEOS-Chem grid cell areas';
 fprintf('Saving Area data\n');
 gcstruct2ncdf(fullfile(save_dir, 'GEOS-Chem-Areas.nc'), 'do_tedge', Area);
-
+ 
 fprintf('Loading Base case production data\n');
 BaseCaseProd = load_and_extract(fullfile(base_dir,'Daily24hrs','All2012Daily','JPLnoMPN-Pickp0-Prod.mat'));
 BaseCaseProd = prod_descriptions(BaseCaseProd, 'Base Case');
 fprintf('Saving Base case production data\n');
 gcstruct2ncdf(fullfile(save_dir, 'BaseCaseNOProduction.nc'), 'do_tedge', BaseCaseProd);
-
+ 
 UpdatedCaseProf = load_and_extract(fullfile(base_dir,'Daily24hrs','All2012Daily','HendwMPN-Pickp0-Prod.mat'));
 UpdatedCaseProf = prod_descriptions(UpdatedCaseProf, 'Updated Case');
 fprintf('Saving Updated case production data\n');
 gcstruct2ncdf(fullfile(save_dir, 'UpdatedCaseNOProduction.nc'), 'do_tedge', UpdatedCaseProf);
-
+ 
 UpdatedP33CaseProd = load_and_extract(fullfile(base_dir,'Daily24hrs','All2012Daily','HendwMPN-Pickp33-Prod.mat'));
 UpdatedP33CaseProd = prod_descriptions(UpdatedP33CaseProd, 'Updated +33% Case');
 gcstruct2ncdf(fullfile(save_dir, 'UpdatedPlus33CaseNOProduction.nc'), 'do_tedge', UpdatedP33CaseProd);
@@ -47,8 +47,10 @@ Data(4).description = 'Number density of air in the model grid box';
 Data(5).description = 'Model level at which the tropopause resides (may be fractional)';
 Data(5).tVec = floor(Data(5).tVec);
 fprintf('Saving ancillary data\n');
-gcstruct2ncdf(fullfile(save_dir, 'AncillaryModelParameters.nc'), Data);
-
+aux_file_stems = {'PSURF','BXHEIGHT','TEMP','NDENS','TP'};
+for a=1:numel(Data)
+    gcstruct2ncdf(fullfile(save_dir, sprintf('AncillaryModelParameters-%s.nc',aux_file_stems{a})), Data(a));
+end
 %OMI NO2 for all cases
 for a=1:numel(cases_mat_names);
    fprintf('Loading %s\n', cases_mat_names{a});
